@@ -29,21 +29,38 @@ function CampoEntrada({ id, label, tipo, placeholder, requerido, name, value, on
                 {label}
             </label>
             <div className="relative">
-                <input
-                    type={tipo}
-                    className={inputClasses}
-                    readOnly={readonly}
-                    id={id}
-                    placeholder={placeholder}
-                    required={requerido}
-                    name={name}
-                    value={value}
-                    onChange={(e) => {
-                        setTouched(true);
-                        onchange(e);
-                    }}
-                    onBlur={() => setTouched(true)}
-                />
+                {tipo === 'textarea' ? (
+                    <textarea
+                        className={inputClasses}
+                        readOnly={readonly}
+                        id={id}
+                        placeholder={placeholder}
+                        required={requerido}
+                        name={name}
+                        value={value}
+                        onChange={(e) => {
+                            setTouched(true);
+                            onchange(e);
+                        }}
+                        onBlur={() => setTouched(true)}
+                    />
+                ) : (
+                    <input
+                        type={tipo}
+                        className={inputClasses}
+                        readOnly={readonly}
+                        id={id}
+                        placeholder={placeholder}
+                        required={requerido}
+                        name={name}
+                        value={value}
+                        onChange={(e) => {
+                            setTouched(true);
+                            onchange(e);
+                        }}
+                        onBlur={() => setTouched(true)}
+                    />
+                )}
                 {tipo === 'number' && name.includes('frequencia') && (
                     <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                         <FontAwesomeIcon icon={faPercent} className="text-gray-500" />

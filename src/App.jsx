@@ -3,6 +3,7 @@ import '@popperjs/core/dist/cjs/popper.js'
 import Menu from './componentes/Menu'
 import Home from './componentes/telas/Home'
 import Aluno from './componentes/telas/aluno/Aluno'
+import Curso from './componentes/telas/curso/Curso'
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
       {
         path : "alunos",
         element : <Aluno />
+      },
+      {
+        path : "cursos",
+        element : <Curso />
       }      
     ]
   }

@@ -3,12 +3,13 @@
 import { useState } from 'react'
 import { Dialog, DialogPanel, Disclosure, DisclosureButton, DisclosurePanel, Popover, PopoverButton, PopoverGroup, PopoverPanel } from '@headlessui/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars, faTimes, faUserGraduate, faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import { faBars, faTimes, faUserGraduate, faChevronDown, faGraduationCap } from '@fortawesome/free-solid-svg-icons'
 import Logo from './comuns/Logo.jsx'
 import { Outlet } from 'react-router-dom';
 
 const products = [
   { name: 'Alunos', description: 'Visualize e gerencie o cadastro dos alunos', href: '/alunos', icon: faUserGraduate },
+  { name: 'Cursos', description: 'Visualize e gerencie o cadastro dos cursos', href: '/cursos', icon: faGraduationCap }
 ]
 
 function Menu() {

@@ -1,5 +1,5 @@
 export const getCursosAPI = async () => {
-    const response = await fetch(`${process.env.REACT_APP_ENDERECO_API}curso`,
+    const response = await fetch(`${process.env.REACT_APP_ENDERECO_API}/curso`,
         {
             method : "GET",
             headers : {
@@ -12,7 +12,7 @@ export const getCursosAPI = async () => {
 
 export const getCursoPorCodigoAPI = async codigo => {
     const response = await fetch(
-        `${process.env.REACT_APP_ENDERECO_API}curso/${codigo}`,
+        `${process.env.REACT_APP_ENDERECO_API}/curso/${codigo}`,
         {
             method : "GET",
             headers : {
@@ -25,7 +25,7 @@ export const getCursoPorCodigoAPI = async codigo => {
 
 export const deleteCursoAPI = async codigo => {
     const response = await fetch(
-        `${process.env.REACT_APP_ENDERECO_API}curso/${codigo}`,
+        `${process.env.REACT_APP_ENDERECO_API}/curso/${codigo}`,
         {
             method : "DELETE",
             headers : {
@@ -38,7 +38,7 @@ export const deleteCursoAPI = async codigo => {
 
 export const cadastraCursoAPI = async (objeto, metodo) => {
     const response = await fetch(
-        `${process.env.REACT_APP_ENDERECO_API}curso`,
+        `${process.env.REACT_APP_ENDERECO_API}/curso`,
         {
             method : metodo,
             headers : {

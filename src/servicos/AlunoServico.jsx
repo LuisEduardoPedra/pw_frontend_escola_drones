@@ -1,5 +1,5 @@
 export const getAlunosAPI = async () => {
-    const response = await fetch(`${process.env.REACT_APP_ENDERECO_API}/aluno`,
+    const response = await fetch(`${process.env.REACT_APP_ENDERECO_API}aluno`,
         {
             method : "GET",
             headers : {
@@ -12,7 +12,7 @@ export const getAlunosAPI = async () => {
 
 export const getAlunoPorCodigoAPI = async codigo => {
     const response = await fetch(
-        `${process.env.REACT_APP_ENDERECO_API}/aluno/${codigo}`,
+        `${process.env.REACT_APP_ENDERECO_API}aluno/${codigo}`,
         {
             method : "GET",
             headers : {
@@ -25,7 +25,7 @@ export const getAlunoPorCodigoAPI = async codigo => {
 
 export const deleteAlunoAPI = async codigo => {
     const response = await fetch(
-        `${process.env.REACT_APP_ENDERECO_API}/aluno/${codigo}`,
+        `${process.env.REACT_APP_ENDERECO_API}aluno/${codigo}`,
         {
             method : "DELETE",
             headers : {
@@ -38,7 +38,7 @@ export const deleteAlunoAPI = async codigo => {
 
 export const cadastraAlunoAPI = async (objeto, metodo) => {
     const response = await fetch(
-        `${process.env.REACT_APP_ENDERECO_API}/aluno`,
+        `${process.env.REACT_APP_ENDERECO_API}aluno`,
         {
             method : metodo,
             headers : {

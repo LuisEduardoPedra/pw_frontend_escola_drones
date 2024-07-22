@@ -76,39 +76,51 @@ function Curso() {
         setObjeto(prevState => {
             if (mainField === 'alunos') {
                 let updatedAlunos = [...prevState.alunos];
+                const alunoCodigo = parseInt(value, 10);
     
-                if (type === 'checkbox') {
-                    const alunoCodigo = parseInt(value);
-    
-                    if (subField === 'ativo') {
-                        if (checked) {
-                            // Adiciona o aluno se não estiver presente
-                            if (!updatedAlunos.some(aluno => aluno.codigo === alunoCodigo)) {
-                                const alunoSelecionado = listaAlunos.find(aluno => aluno.codigo === alunoCodigo);
-                                if (alunoSelecionado) {
-                                    updatedAlunos.push({
-                                        codigo: alunoSelecionado.codigo,
-                                        nome: alunoSelecionado.nome,
-                                        ativo: true, // Definido como true para alunos adicionados
-                                    });
-                                }
+                if (type === 'checkbox' && subField === 'ativo') {
+                    if (checked) {
+                        // Adiciona o aluno se não estiver presente
+                        if (!updatedAlunos.some(aluno => aluno.codigo === alunoCodigo)) {
+                            const alunoSelecionado = listaAlunos.find(aluno => aluno.codigo === alunoCodigo);
+                            if (alunoSelecionado) {
+                                updatedAlunos.push({
+                                    codigo: alunoSelecionado.codigo,
+                                    nome: alunoSelecionado.nome,
+                                    ativo: true // Definido como true para alunos adicionados
+                                });
                             }
-                        } else {
-                            // Remove o aluno se estiver presente
-                            updatedAlunos = updatedAlunos.filter(aluno => aluno.codigo !== alunoCodigo);
                         }
                     } else {
-                        // Atualiza os campos específicos do aluno
-                        if (updatedAlunos[index]) {
-                            updatedAlunos[index] = {
-                                ...updatedAlunos[index],
-                                [subField]: type === 'checkbox' ? checked : value
-                            };
-                        }
+                        // Remove o aluno se estiver presente
+                        updatedAlunos = updatedAlunos.filter(aluno => aluno.codigo !== alunoCodigo);
                     }
                 } else {
-                    // Atualiza outros campos
-                    return { ...prevState, [name]: value };
+                    // Atualiza os campos específicos do aluno
+                    if (updatedAlunos[index]) {
+                        updatedAlunos[index] = {
+                            ...updatedAlunos[index],
+                            [subField]: type === 'checkbox'
+                                ? checked
+                                : (subField === 'nota' || subField === 'frequencia')
+                                    ? value === '' ? '' : parseFloat(value).toFixed(2) // Corrige valores vazios e NaN
+                                    : value
+                        };
+                    } else {
+                        const alunoSelecionado = listaAlunos.find(aluno => aluno.codigo === alunoCodigo);
+                        if (alunoSelecionado) {
+                            const novoAluno = {
+                                codigo: alunoSelecionado.codigo,
+                                nome: alunoSelecionado.nome,
+                                [subField]: type === 'checkbox'
+                                    ? checked
+                                    : (subField === 'nota' || subField === 'frequencia')
+                                        ? value === '' ? '' : parseFloat(value).toFixed(2) // Corrige valores vazios e NaN
+                                        : value
+                            };
+                            updatedAlunos.push(novoAluno);
+                        }
+                    }
                 }
     
                 return { ...prevState, alunos: updatedAlunos };

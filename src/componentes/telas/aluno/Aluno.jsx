@@ -72,38 +72,43 @@ function Aluno() {
             if (mainField === 'cursos') {
                 let updatedCursos = [...prevState.cursos];
     
-                if (type === 'checkbox') {
-                    const cursoCodigo = parseInt(value);
+                const cursoCodigo = parseInt(value, 10);
     
-                    if (subField === 'ativo') {
-                        if (checked) {
-                            // Adiciona o curso se não estiver presente
-                            if (!updatedCursos.some(curso => curso.curso_codigo === cursoCodigo)) {
-                                const cursoSelecionado = listaCursos.find(curso => curso.codigo === cursoCodigo);
-                                if (cursoSelecionado) {
-                                    updatedCursos.push({
-                                        curso_codigo: cursoSelecionado.codigo,
-                                        curso_nome: cursoSelecionado.nome,
-                                        ativo: true
-                                    });
-                                }
+                if (type === 'checkbox' && subField === 'ativo') {
+                    if (checked) {
+                        // Adiciona o curso se não estiver presente
+                        if (!updatedCursos.some(curso => curso.curso_codigo === cursoCodigo)) {
+                            const cursoSelecionado = listaCursos.find(curso => curso.codigo === cursoCodigo);
+                            if (cursoSelecionado) {
+                                updatedCursos.push({
+                                    curso_codigo: cursoSelecionado.codigo,
+                                    curso_nome: cursoSelecionado.nome,
+                                    ativo: true
+                                });
                             }
-                        } else {
-                            // Remove o curso se estiver presente
-                            updatedCursos = updatedCursos.filter(curso => curso.curso_codigo !== cursoCodigo);
                         }
                     } else {
-                        // Atualiza os campos específicos do curso
-                        if (updatedCursos[index]) {
-                            updatedCursos[index] = {
-                                ...updatedCursos[index],
-                                [subField]: type === 'checkbox' ? checked : value
-                            };
-                        }
+                        // Remove o curso se estiver presente
+                        updatedCursos = updatedCursos.filter(curso => curso.curso_codigo !== cursoCodigo);
                     }
                 } else {
-                    // Atualiza outros campos
-                    return { ...prevState, [name]: value };
+                    // Atualiza os campos específicos do curso
+                    if (updatedCursos[index]) {
+                        updatedCursos[index] = {
+                            ...updatedCursos[index],
+                            [subField]: type === 'checkbox' ? checked : (subField === 'curso_nota' || subField === 'frequencia') ? parseFloat(value) : value
+                        };
+                    } else {
+                        const cursoSelecionado = listaCursos.find(curso => curso.codigo === cursoCodigo);
+                        if (cursoSelecionado) {
+                            const novoCurso = {
+                                curso_codigo: cursoSelecionado.codigo,
+                                curso_nome: cursoSelecionado.nome,
+                                [subField]: type === 'checkbox' ? checked : (subField === 'curso_nota' || subField === 'frequencia') ? parseFloat(value) : value
+                            };
+                            updatedCursos.push(novoCurso);
+                        }
+                    }
                 }
     
                 return { ...prevState, cursos: updatedCursos };
@@ -111,9 +116,7 @@ function Aluno() {
                 return { ...prevState, [name]: value };
             }
         });
-    };
-    
-    
+    }; 
     
 
     const [carregando, setCarregando] = useState(false);

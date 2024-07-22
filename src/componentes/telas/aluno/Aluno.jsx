@@ -71,34 +71,48 @@ function Aluno() {
         setObjeto(prevState => {
             if (mainField === 'cursos') {
                 let updatedCursos = [...prevState.cursos];
-                if (type === 'checkbox' && subField === 'ativo' && !checked) {
-
-                    updatedCursos = updatedCursos.filter(c => c.curso_codigo !== parseInt(value));
-                } else {
-                    if (updatedCursos[index]) {
-                        updatedCursos[index] = {
-                            ...updatedCursos[index],
-                            [subField]: type === 'checkbox' ? checked : value
-                        };
+    
+                if (type === 'checkbox') {
+                    const cursoCodigo = parseInt(value);
+    
+                    if (subField === 'ativo') {
+                        if (checked) {
+                            // Adiciona o curso se não estiver presente
+                            if (!updatedCursos.some(curso => curso.curso_codigo === cursoCodigo)) {
+                                const cursoSelecionado = listaCursos.find(curso => curso.codigo === cursoCodigo);
+                                if (cursoSelecionado) {
+                                    updatedCursos.push({
+                                        curso_codigo: cursoSelecionado.codigo,
+                                        curso_nome: cursoSelecionado.nome,
+                                        ativo: true
+                                    });
+                                }
+                            }
+                        } else {
+                            // Remove o curso se estiver presente
+                            updatedCursos = updatedCursos.filter(curso => curso.curso_codigo !== cursoCodigo);
+                        }
                     } else {
-
-                        const cursoSelecionado = listaCursos.find(curso => curso.codigo === parseInt(value));
-                        if (cursoSelecionado) {
-                            const novoCurso = {
-                                curso_codigo: parseInt(value),
-                                curso_nome: cursoSelecionado.nome, 
+                        // Atualiza os campos específicos do curso
+                        if (updatedCursos[index]) {
+                            updatedCursos[index] = {
+                                ...updatedCursos[index],
                                 [subField]: type === 'checkbox' ? checked : value
                             };
-                            updatedCursos.push(novoCurso);
                         }
                     }
+                } else {
+                    // Atualiza outros campos
+                    return { ...prevState, [name]: value };
                 }
+    
                 return { ...prevState, cursos: updatedCursos };
             } else {
                 return { ...prevState, [name]: value };
             }
         });
     };
+    
     
     
 

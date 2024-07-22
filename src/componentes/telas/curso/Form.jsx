@@ -17,8 +17,14 @@ function Form() {
             idform="formulario" acaoCadastrar={acaoCadastrar} toggleModal={toggleModal}>
             <Tabs selectedIndex={selectedTab} onSelect={index => setSelectedTab(index)}>
                 <TabList className="flex gap-4">
-                    <Tab className="text-white font-medium text-lg px-4 py-2">Curso</Tab>
-                    <Tab className="text-white font-medium text-lg px-4 py-2">Alunos</Tab>
+                    <Tab className={`px-4 py-2 font-medium text-lg rounded-md ${selectedTab === 0
+                            ? 'bg-blue-500 text-white'
+                            : 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+                        }`}>Curso</Tab>
+                    <Tab className={`px-4 py-2 font-medium text-lg rounded-md ${selectedTab === 1
+                            ? 'bg-blue-500 text-white'
+                            : 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+                        }`}>Alunos</Tab>
                 </TabList>
 
                 <TabPanel>
@@ -101,9 +107,9 @@ function Form() {
                                     value={aluno.codigo}
                                     checked={objeto.alunos.some((a) => a.codigo === aluno.codigo)}
                                     onChange={handleChange}
-                                    className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
+                                    className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out dark:text-indigo-400"
                                 />
-                                <label htmlFor={`aluno-${aluno.codigo}`} className="ml-2 text-sm text-white">
+                                <label htmlFor={`aluno-${aluno.codigo}`} className="ml-2 text-sm text-gray-800 dark:text-gray-300">
                                     {aluno.nome}
                                 </label>
                             </div>

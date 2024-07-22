@@ -76,33 +76,48 @@ function Curso() {
         setObjeto(prevState => {
             if (mainField === 'alunos') {
                 let updatedAlunos = [...prevState.alunos];
-                if (type === 'checkbox' && subField === 'ativo' && !checked) {
-                    // Remove aluno do array se checkbox for desmarcado
-                    updatedAlunos = updatedAlunos.filter(a => a.codigo !== parseInt(value));
-                } else {
-                    if (updatedAlunos[index]) {
-                        updatedAlunos[index] = {
-                            ...updatedAlunos[index],
-                            [subField]: type === 'checkbox' ? checked : value
-                        };
+    
+                if (type === 'checkbox') {
+                    const alunoCodigo = parseInt(value);
+    
+                    if (subField === 'ativo') {
+                        if (checked) {
+                            // Adiciona o aluno se não estiver presente
+                            if (!updatedAlunos.some(aluno => aluno.codigo === alunoCodigo)) {
+                                const alunoSelecionado = listaAlunos.find(aluno => aluno.codigo === alunoCodigo);
+                                if (alunoSelecionado) {
+                                    updatedAlunos.push({
+                                        codigo: alunoSelecionado.codigo,
+                                        nome: alunoSelecionado.nome,
+                                        ativo: true, // Definido como true para alunos adicionados
+                                    });
+                                }
+                            }
+                        } else {
+                            // Remove o aluno se estiver presente
+                            updatedAlunos = updatedAlunos.filter(aluno => aluno.codigo !== alunoCodigo);
+                        }
                     } else {
-                        const alunoSelecionado = listaAlunos.find(aluno => aluno.codigo === parseInt(value));
-                        if (alunoSelecionado) {
-                            const novoAluno = {
-                                codigo: parseInt(value),
-                                nome: alunoSelecionado.nome,
+                        // Atualiza os campos específicos do aluno
+                        if (updatedAlunos[index]) {
+                            updatedAlunos[index] = {
+                                ...updatedAlunos[index],
                                 [subField]: type === 'checkbox' ? checked : value
                             };
-                            updatedAlunos.push(novoAluno);
                         }
                     }
+                } else {
+                    // Atualiza outros campos
+                    return { ...prevState, [name]: value };
                 }
+    
                 return { ...prevState, alunos: updatedAlunos };
             } else {
                 return { ...prevState, [name]: value };
             }
         });
     };
+    
     
 
     const [carregando, setCarregando] = useState(false);

@@ -8,8 +8,13 @@ import {
 import Tabela from "./Tabela";
 import Form from "./Form";
 import Carregando from "../../comuns/Carregando";
+import WithAuth from "../../../seguranca/WithAuth";
+import { useNavigate } from "react-router-dom"
 
 function Aluno() {
+
+    let navigate = useNavigate();
+
     const [alerta, setAlerta] = useState({ status: "", message: "" });
     const [listaObjetos, setListaObjetos] = useState([]);
     const [listaCursos, setListaCursos] = useState([]);
@@ -40,11 +45,16 @@ function Aluno() {
     }
 
     const editarObjeto = async (codigo) => {
-        const aluno = await getAlunoPorCodigoAPI(codigo);
-        setObjeto(aluno);
-        setEditar(true);
-        setAlerta({ status: "", message: "" });
-        setModalOpen(true);
+        try {
+            const aluno = await getAlunoPorCodigoAPI(codigo);
+            setObjeto(aluno);
+            setEditar(true);
+            setAlerta({ status: "", message: "" });
+            setModalOpen(true);
+        } catch (err) {
+            window.location.reload();
+            navigate("login", { replace: true });
+        }
     };
 
     const acaoCadastrar = async (e) => {
@@ -58,7 +68,8 @@ function Aluno() {
                 setEditar(true);
             }
         } catch (err) {
-            console.log(err);
+            window.location.reload();
+            navigate("login", { replace: true });
         }
         recuperaAlunos();
         setModalOpen(false);
@@ -67,13 +78,13 @@ function Aluno() {
     const handleChange = (event) => {
         const { name, value, type, checked } = event.target;
         const [mainField, index, subField] = name.split(/[\[\].]/).filter(Boolean);
-    
+
         setObjeto(prevState => {
             if (mainField === 'cursos') {
                 let updatedCursos = [...prevState.cursos];
-    
+
                 const cursoCodigo = parseInt(value, 10);
-    
+
                 if (type === 'checkbox' && subField === 'ativo') {
                     if (checked) {
                         // Adiciona o curso se não estiver presente
@@ -110,21 +121,27 @@ function Aluno() {
                         }
                     }
                 }
-    
+
                 return { ...prevState, cursos: updatedCursos };
             } else {
                 return { ...prevState, [name]: value };
             }
         });
-    }; 
-    
+    };
+
 
     const [carregando, setCarregando] = useState(false);
 
     const recuperaAlunos = async () => {
-        setCarregando(true);
-        setListaObjetos(await getAlunosAPI());
-        setCarregando(false);
+        try {
+            setCarregando(true);
+            setListaObjetos(await getAlunosAPI());
+            setCarregando(false);
+        } catch (err) {
+            window.location.reload();
+            navigate("login", { replace: true });
+        }
+
     }
 
     const recuperaCursos = async () => {
@@ -138,14 +155,21 @@ function Aluno() {
         } catch (error) {
             console.error("Erro ao recuperar cursos:", error);
             setListaCursos([]);
+            window.location.reload();
+            navigate("login", { replace: true });
         }
-    }    
+    }
 
     const remover = async (codigo) => {
         if (window.confirm('Deseja remover este objeto?')) {
-            let retornoAPI = await deleteAlunoAPI(codigo);
-            setAlerta({ status: retornoAPI.status, message: retornoAPI.message });
-            recuperaAlunos();
+            try {
+                let retornoAPI = await deleteAlunoAPI(codigo);
+                setAlerta({ status: retornoAPI.status, message: retornoAPI.message });
+                recuperaAlunos();
+            } catch (err) {
+                window.location.reload();
+                navigate("login", { replace: true });
+            }
         }
     }
 
@@ -168,4 +192,4 @@ function Aluno() {
     );
 }
 
-export default Aluno;
+export default WithAuth(Aluno);

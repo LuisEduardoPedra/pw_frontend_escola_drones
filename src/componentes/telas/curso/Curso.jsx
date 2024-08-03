@@ -7,8 +7,13 @@ import {
 import Tabela from "./Tabela";
 import Form from "./Form";
 import Carregando from "../../comuns/Carregando";
+import WithAuth from "../../../seguranca/WithAuth";
+import { useNavigate } from "react-router-dom"
 
 function Curso() {
+
+    let navigate = useNavigate();
+
     const [alerta, setAlerta] = useState({ status: "", message: "" });
     const [listaObjetos, setListaObjetos] = useState([]);
     const [listaAlunos, setListaAlunos] = useState([]);
@@ -45,11 +50,16 @@ function Curso() {
     }
 
     const editarObjeto = async (codigo) => {
-        const curso = await getCursoPorCodigoAPI(codigo);
-        setObjeto(curso);
-        setEditar(true);
-        setAlerta({ status: "", message: "" });
-        setModalOpen(true);
+        try {
+            const curso = await getCursoPorCodigoAPI(codigo);
+            setObjeto(curso);
+            setEditar(true);
+            setAlerta({ status: "", message: "" });
+            setModalOpen(true);
+        } catch (err) {
+            window.location.reload();
+            navigate("login", { replace: true });
+        }
     };
 
     const acaoCadastrar = async (e) => {
@@ -63,7 +73,8 @@ function Curso() {
                 setEditar(true);
             }
         } catch (err) {
-            console.log(err);
+            window.location.reload();
+            navigate("login", { replace: true });
         }
         recuperaCursos();
         setModalOpen(false);
@@ -72,12 +83,12 @@ function Curso() {
     const handleChange = (event) => {
         const { name, value, type, checked } = event.target;
         const [mainField, index, subField] = name.split(/[\[\].]/).filter(Boolean);
-    
+
         setObjeto(prevState => {
             if (mainField === 'alunos') {
                 let updatedAlunos = [...prevState.alunos];
                 const alunoCodigo = parseInt(value, 10);
-    
+
                 if (type === 'checkbox' && subField === 'ativo') {
                     if (checked) {
                         // Adiciona o aluno se não estiver presente
@@ -122,15 +133,15 @@ function Curso() {
                         }
                     }
                 }
-    
+
                 return { ...prevState, alunos: updatedAlunos };
             } else {
                 return { ...prevState, [name]: value };
             }
         });
     };
-    
-    
+
+
 
     const [carregando, setCarregando] = useState(false);
 
@@ -147,6 +158,8 @@ function Curso() {
         } catch (error) {
             console.error("Erro ao recuperar cursos:", error);
             setListaObjetos([]);
+            window.location.reload();
+            navigate("login", { replace: true });
         }
         setCarregando(false);
     }
@@ -164,15 +177,22 @@ function Curso() {
         } catch (error) {
             console.error("Erro ao recuperar alunos:", error);
             setListaAlunos([]);
+            window.location.reload();
+            navigate("login", { replace: true });
         }
         setCarregando(false);
     };
 
     const remover = async (codigo) => {
         if (window.confirm('Deseja remover este objeto?')) {
-            let retornoAPI = await deleteCursoAPI(codigo);
-            setAlerta({ status: retornoAPI.status, message: retornoAPI.message });
-            recuperaCursos();
+            try {
+                let retornoAPI = await deleteCursoAPI(codigo);
+                setAlerta({ status: retornoAPI.status, message: retornoAPI.message });
+                recuperaCursos();
+            } catch (err) {
+                window.location.reload();
+                navigate("login", { replace: true });
+            }
         }
     }
 
@@ -196,4 +216,4 @@ function Curso() {
     );
 }
 
-export default Curso;
+export default WithAuth(Curso);
